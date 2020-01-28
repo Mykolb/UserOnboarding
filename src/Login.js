@@ -6,11 +6,8 @@ import { TextField, Select } from 'formik-material-ui';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
 //import yup//
 import * as Yup from 'yup';
-import { axiosWithAuth } from './auth/AxiosAuth';
 import axios from 'axios';
 import './Login.css';
 
