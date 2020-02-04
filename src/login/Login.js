@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 //like importing a ui library components
 import {  withFormik, Form, Field} from 'formik';
 // //Material UI for for-mik
-import { TextField, Select } from 'formik-material-ui';
+import { TextField } from 'formik-material-ui';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -12,7 +12,14 @@ import axios from 'axios';
 import './Login.css';
 
 
+//data shape
 
+// _id: props._id,
+// name: props.name,
+// age: props.age,
+// grade: props.grade,
+// address: props.address,
+// date: props.date
 
 //Field replaces input
 //onchange is handled by formik 
@@ -36,15 +43,14 @@ const Login = ({ errors, touched, values, status }) => {
 
   return(
     <div>
-      <h2>School District Login</h2>
-    {/* <h2> Please Login below</h2> */}
+      <h2>Please Add A Student</h2>
     <Form className='container'>
       {touched.name && errors.name && <p>{errors.name}</p> }
       <Field
         className='field'
-        type='name'
-        name='name'
-        label='Enter name here'
+        type='_id'
+        name='_id'
+        label='Enter ID here'
         component={TextField} //material-ui-text field
         margin='normal'
         variant='outlined'
@@ -54,38 +60,48 @@ const Login = ({ errors, touched, values, status }) => {
       {touched.email && errors.email && <p>{errors.email}</p>}
       <Field
         className='field'
-        type='email'
-        name='email'
-        label='Enter email here'
+        type='name'
+        name='name'
+        label='Enter name here'
         component={TextField}
         margin='normal'
         variant='outlined'
         fullWidth
       />
   
-      {touched.password && errors.password && <p>{errors.password}</p>}
+      {touched.age && errors.age && <p>{errors.age}</p>}
+      <Field
+        className='field'
+        type='age'
+        name='age'
+        label='Enter age here'
+        component={TextField}
+        margin='normal'
+        variant='outlined'
+        fullWidth
+      />
+
+      {touched.grade && errors.grade && <p>{errors.grade}</p>}
+       <Field
+        className='field'
+        type='grade'
+        name='grade'
+        label='Enter grade here'
+        component={TextField}
+        margin='normal'
+        variant='outlined'
+        fullWidth
+      />
+      {touched.date && errors.date && <p>{errors.date}</p>}
       <Field 
       className='field'
-      type='password'
-      name='password'
-      label='Enter password here'
+      type='date'
+      name='date'
       component={TextField}
       margin='normal'
       variant='outlined'
       fullWidth
-      InputProps={{
-        endAdornment: (
-          <InputAdornment position="end">
-            <IconButton
-              edge="end"
-              aria-label="toggle password visibility"
-            >
-              {/* {values.showPassword ? <VisibilityOff /> : <Visibility />} */}
-            </IconButton>
-          </InputAdornment>
-        ),
-      }}
-    />
+      /> 
      <>
       {touched.address && errors.address && <p>{errors.address}</p>}
       <Field 
@@ -101,22 +117,6 @@ const Login = ({ errors, touched, values, status }) => {
       fullWidth
     />
     </>
-    
-    <br />
-    {/* adding dropdown field-was so easy!  */}
-    <Field component='select' name='user' className='select' >
-      <option value='Admin'>Select: Admin</option>
-      <option value='Student'>Select: Student</option>
-      <option value='Teacher'>Select: Teacher</option>
-    </Field>
-    <label>
-      {/* wrapping label tag around eveything makes the text clickable too */}
-
-      {touched.tos && errors.tos && <p>{errors.tos}</p>}
-      <Field type='checkbox' name='tos' checked={values.tos} className='checkbox'  />
-      Please Accept Terms of Service
-    </label>
-    <br />
     <Button type='submit'  margin='normal' fontSize='small' fullWidth color='primary'>
     Press Me
     </Button>
@@ -152,21 +152,21 @@ const FormikLogin = withFormik({
   // yup will pass or fail the input depending on what you put in 
   //can create custom errors,
   validationSchema: Yup.object().shape({
+    _id: Yup.number()
+      .required(),
     name: Yup.string()
-      .max(10, 'Name exceeds character limit') 
+      .max(20, 'Name exceeds character limit') 
       .uppercase('name is case sensitive'), //not working
-    email: Yup.string()
-      .email()
-      .required('Did you ignore the first email warning?'),
-    password: Yup.number()
-      .min(4, "Please enter a password that is 4 characters or longer")
+    grade: Yup.string()
+      .grade()
+      .required('Please enter a grade'),
+    age: Yup.number()
+      .min(1, "Please enter a password that is 4 characters or longer")
       .required(),
     address: Yup.string()
     .notRequired()
     .max(200, 'Address had exceeded character limit'),
-    tos: Yup.boolean()
-    .required()
-    .oneOf([true],'Select Terms of Service to continue' )
+
   }),
 
   // Set a top-level status to anything you want imperatively.
@@ -178,7 +178,7 @@ const FormikLogin = withFormik({
     setErrors({ email: 'Email was already registered, please try another'})
   } else {
     axios
-      .post('https://reqres.in/api/users', values)
+      .post('https://useronboarding-back-end.herokuapp.com/student', values)
       .then(res => {
         // console.log(res.data)
         setStatus(res.data)
